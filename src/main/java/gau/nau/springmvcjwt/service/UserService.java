@@ -1,12 +1,14 @@
 package gau.nau.springmvcjwt.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import gau.nau.springmvcjwt.entities.User;
 
+@Service
 public class UserService {
     
     public static List<User> userList = new ArrayList<>();
@@ -58,5 +60,13 @@ public class UserService {
         return null;
     }
     
-    public boolean checkLogin
+    public boolean checkLogin(User user) {
+        for (User userExist : userList) {
+            if (StringUtils.equals(user.getUsername(), userExist.getUsername()) &&
+                StringUtils.equals(user.getPassword(), userExist.getPassword())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

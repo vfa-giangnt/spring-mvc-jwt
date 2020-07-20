@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <beans:bean id="restServiceEntryPoint"
+        class="gau.nau.springmvcjwt.rest.RestAuthenticationEntryPoint" />
+    <beans:bean id="customAccessDeniedHandler"
+        class="gau.nau.springmvcjwt.rest.CustomAccessDeniedHandler" />
+    <beans:bean id="jwtAuthenticationFilter"
+        class="gau.nau.springmvcjwt.rest.JwtAuthenticationTokenFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager" />
+    </beans:bean>
+
+    <http pattern="/rest/login" security="none" />
+
+    <http pattern="/rest/**" auto-config="false" use-expressions="true" create-session="stateless"
+        entry-point-ref="restServiceEntryPoint">
+        <intercept-url pattern="/rest/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"
+            method="GET" />
+        <intercept-url pattern="/rest/**" access="hasRole('ROLE_ADMIN')" method="DELETE" />
+        <intercept-url pattern="/rest/**" access="hasRole('ROLE_ADMIN')" method="POST" />
+
+        <custom-filter ref="jwtAuthenticationFilter" position="FORM_LOGIN_FILTER" />
+        <access-denied-handler ref="customAccessDeniedHandler" />
+        <csrf disabled="true" />
+    </http>
+
+    <http auto-config="true">
+        <intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
+
+        <form-login login-page="/login" login-processing-url="/j_spring_security_login"
+            default-target-url="/admin" authentication-failure-url="/login?error"
+            username-parameter="username" password-parameter="password" />
+
+        <logout logout-url="/j_spring_security_logout" logout-success-url="/logout"
+            delete-cookies="JSESSIONID" />
+    </http>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider>
+            <user-service>
+                <user name="kai" authorities="ROLE_ADMIN" password="{noop}123456" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>
