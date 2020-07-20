@@ -5,11 +5,11 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <beans:bean id="restServiceEntryPoint"
-        class="gau.nau.springmvcjwt.rest.RestAuthenticationEntryPoint" />
+        class="gau.nau.springbootjwt.rest.RestAuthenticationEntryPoint" />
     <beans:bean id="customAccessDeniedHandler"
-        class="gau.nau.springmvcjwt.rest.CustomAccessDeniedHandler" />
+        class="gau.nau.springbootjwt.rest.CustomAccessDeniedHandler" />
     <beans:bean id="jwtAuthenticationFilter"
-        class="gau.nau.springmvcjwt.rest.JwtAuthenticationTokenFilter">
+        class="gau.nau.springbootjwt.rest.JwtAuthenticationTokenFilter">
         <beans:property name="authenticationManager" ref="authenticationManager" />
     </beans:bean>
 
