@@ -47,28 +47,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/rest/login**").permitAll();
         
         http
-            .antMatcher("/rest/**")
-            .httpBasic()
-            .authenticationEntryPoint(restAuthenticationEntryPoint())
-            
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-            
-            .antMatchers(HttpMethod.GET, "/rest/**")
-            .access("hasRole(('ROLE_ADMIN') or hasRole('ROLE_USER'))")
-            
-            .antMatchers(HttpMethod.POST, "/rest/**")
-            .access("hasRole('ROLE_ADMIN')")
-            
-            .antMatchers(HttpMethod.DELETE, "/rest/**")
-            .access("hasRole('ROLE_ADMIN')")
-            .and()
-            .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling()
-            .accessDeniedHandler(customAccessDeniedHandler())
-        ;
+        .antMatcher("/rest/**")
+        .httpBasic()
+        .authenticationEntryPoint(restAuthenticationEntryPoint())
+        
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and().authorizeRequests()
+        
+        .antMatchers(HttpMethod.GET, "/rest/**")
+        .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+        
+        .antMatchers(HttpMethod.POST, "/rest/**")
+        .access("hasRole('ROLE_ADMIN')")
+        
+        .antMatchers(HttpMethod.DELETE, "/rest/**")
+        .access("hasRole('ROLE_ADMIN')")
+        
+        .and()
+        .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
     }
 }
